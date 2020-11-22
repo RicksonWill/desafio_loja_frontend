@@ -1,9 +1,21 @@
 import React, { Component } from "react";
 import { Modal, Button } from "semantic-ui-react";
+import api from '../../../../service/api'
+import { success, error } from '../../../../utils/toast'
 
 export default class ModalDelete extends Component {
   state = {};
 
+  delete = async () => {
+    const id = this.props.itemSelect.id
+    try {
+      await api.delete(`/produto/${id}/`)
+      success("Produto excluido com sucesso!");
+      this.props.callback(false);
+    } catch (e) {
+      error("Ops... algum problema");
+    }
+  }
   render() {
 
     return (
@@ -14,7 +26,7 @@ export default class ModalDelete extends Component {
         <Modal.Header>Excluir</Modal.Header>
         <Modal.Content >
           <Modal.Description>
-            <p>Deseja realmente apagar o item: {this.props.itemSelect.name} ?</p>
+            <p>Deseja realmente apagar o produto: {this.props.itemSelect.name} ?</p>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
@@ -25,7 +37,7 @@ export default class ModalDelete extends Component {
             content="Deletar"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => {}}
+            onClick={() => {this.delete()}}
             positive
           />
         </Modal.Actions>

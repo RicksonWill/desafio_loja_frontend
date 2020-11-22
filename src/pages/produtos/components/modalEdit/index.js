@@ -1,26 +1,77 @@
 import React, { Component } from "react";
 import { Modal, Form, Button } from "semantic-ui-react";
+import api from '../../../../service/api'
+import { success, error } from '../../../../utils/toast'
 
 export default class ModalEdit extends Component {
   state = {
     name: "",
     cod: "",
-    value: null,
-    qtd: null,
+    value: "",
+    qtd: "",
+    id: null,
+    errors: {}
   };
 
   LoadData = () =>{
-    const {name,cod, value, qtd} = this.props.itemSelect;
-    this.setState({name,cod, value, qtd})
+    const {name,cod, value, qtd, id} = this.props.itemSelect;
+    this.setState({name,cod, value, qtd, id})
   }
 
-  render() {
+  clear = () => {
+    this.setState({name: "",cod: "", value:"", qtd:""})
+  }
+
+  onSave = async () => {
+    const { name, cod, value, qtd, id } = this.state;
+    const errors = this.validateForm();
+    if(errors){
+      error("Preencha todos os campos obrigatórios!");
+      return;
+    }
+    try {
+      let data = {"name": name, "cod": cod, "value": value, "qtd": qtd};
+      await api.put(`/produto/${id}/`, data);
+      success("Produto salvo com sucesso!");
+      this.props.callback(false);
+    } catch (error) {
+      error("Ops... algum problema")
+    }
+  }
+
+  validateForm = () => {
+    const errors = {};
     const {name, cod, value, qtd} = this.state;
+
+    if (name === "") {
+      errors["name"] = true;
+    }
+    if (cod === "") {
+      errors["cod"] = true;
+    }
+    if (value === "") {
+      errors["value"] = true;
+    }
+    if (qtd === "") {
+      errors["qtd"] = true;
+    }
+    
+    this.setState({ errors });
+    return Object.keys(errors).length;
+  };
+
+  clear = () => {
+    this.setState({name: "",cod: "", value:"", qtd:""})
+  };
+
+  render() {
+    const {name, cod, value, qtd, errors} = this.state;
 
     return (
       <Modal
         onClose={() => {this.props.callback(false)}}
         onMount={()=> this.LoadData()}
+        onUnmount={()=> this.clear()}
         open={this.props.show}
       >
         <Modal.Header>Editar Produto: {this.props.itemSelect.name } </Modal.Header>
@@ -32,6 +83,7 @@ export default class ModalEdit extends Component {
               placeholder="Produto de boa qualidade"
               name="name"
               value={name}
+              error={errors["name"] ? true : false}
               onChange={(e)=>this.setState({name: e.target.value})}
               required
               width={10}
@@ -41,6 +93,7 @@ export default class ModalEdit extends Component {
               placeholder="22883044"
               name="cod"
               value={cod}
+              error={errors["cod"] ? true : false}
               onChange={(e)=>this.setState({cod: e.target.value})}
               required
               width={5}
@@ -54,6 +107,7 @@ export default class ModalEdit extends Component {
               type="number"
               name="value"
               value={value}
+              error={errors["value"] ? true : false}
               onChange={(e)=>this.setState({value: e.target.value})}
               width={7}
             />
@@ -63,6 +117,7 @@ export default class ModalEdit extends Component {
               required
               type="number"
               value={qtd}
+              error={errors["qtd"] ? true : false}
               onChange={(e)=>this.setState({qtd: e.target.value})}
               name="cod"
               width={8}
@@ -79,7 +134,7 @@ export default class ModalEdit extends Component {
             content="Salvar"
             labelPosition='right'
             icon='checkmark'
-            onClick={() => {}}
+            onClick={() => {this.onSave()}}
             positive
           />
         </Modal.Actions>

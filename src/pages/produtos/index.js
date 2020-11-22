@@ -4,6 +4,8 @@ import ModalAdd from './components/modalAdd'
 import ModalDelete from './components/modalDelete'
 import ModalEdit from './components/modalEdit'
 import 'semantic-ui-css/semantic.min.css'
+import api from '../../service/api'
+import { error } from '../../utils/toast'
 
 import './styles.css'
 class Produtos extends Component {
@@ -11,28 +13,33 @@ class Produtos extends Component {
     super(props);
     this.state = {
       dataSeach:[{text:"oi", value:1}],
-      data: [
-        {name: "Moto G6 Plus",cod:"2266717",value:1663.99,qtd:15},
-        {name: "J5 Pro",cod:"54354",value:2233.99,qtd:15},
-        {name: "Moto X4",cod:"76544",value:3643.99,qtd:15},
-        {name: "SLg Q6",cod:"12643",value:4664.99,qtd:15},
-        {name: "Moto G5s",cod:"002348",value:4264.99,qtd:15},
-      ],
+      data: [],
       deleteModal: false,
       addModal: false,
       editModal: false,
       showModalAdd: false,
-      itemSelect: {}
-
+      itemSelect: {},
+      isEmpty: false
     };
   }
   componentDidMount(){
     document.title = "DesafioFPF - Produtos";
+    this.loadData();
   }
 
+  loadData = async ()  => {
+    try {
+      const { data:produtos}  = await api.get('/produto/');
+      produtos.length === 0 ?this.setState({isEmpty: true}):this.setState({isEmpty: false})
+      this.setState({data: produtos}); 
+    } catch (e) {
+      error("Ops... algum problema na conexão");
+      this.setState({isEmpty: true});
+    }
+  }
   
   render() {
-    const { dataSeach, data, deleteModal,editModal, showModalAdd, itemSelect } = this.state;
+    const { dataSeach, data, deleteModal,editModal, showModalAdd, itemSelect, isEmpty } = this.state;
     return (
       <div className="wrapper-pd">
         <div className="top-pd">
@@ -56,6 +63,11 @@ class Produtos extends Component {
           icon='search'
           noResultsMessage="Nenhum produto encontrado."
         />
+        {isEmpty ? 
+        <div className="isEmpty">
+          Nenhum produto encontrado &#128533;
+        </div>
+        :
         <Table singleLine>
           <Table.Header>
             <Table.Row>
@@ -82,17 +94,20 @@ class Produtos extends Component {
             ))}
           </Table.Body>
         </Table>
+        }
         <ModalAdd
           show={showModalAdd}
           callback={(value) => {
             this.setState({ showModalAdd: value });
+            this.loadData();
           }}
-        />
+          />
         <ModalDelete
           show={deleteModal}
           itemSelect={itemSelect}
           callback={(value) => {
             this.setState({ deleteModal: value });
+            this.loadData();
           }}
           />
         <ModalEdit
@@ -100,6 +115,7 @@ class Produtos extends Component {
           itemSelect={itemSelect}
           callback={(value) => {
             this.setState({ editModal: value });
+            this.loadData();
           }}
         />
       </div>
