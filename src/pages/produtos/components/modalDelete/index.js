@@ -2,19 +2,9 @@ import React, { Component } from "react";
 import { Modal, Button } from "semantic-ui-react";
 
 export default class ModalDelete extends Component {
-  state = {
-    name: "",
-    cnpj: "",
-    address: "",
-    serviceType: "",
-    description: "",
-    contact: "",
-    phone: "",
-    showModalNew: this.props.show,
-  };
+  state = {};
 
   render() {
-    const {} = this.state;
 
     return (
       <Modal

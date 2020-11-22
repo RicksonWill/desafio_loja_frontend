@@ -67,8 +67,8 @@ class Produtos extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {data.map((item)=>(
-              <Table.Row>
+            {data.map((item,i)=>(
+              <Table.Row key={i}>
                 <Table.Cell >{item.name}</Table.Cell>
                 <Table.Cell >{item.cod} </Table.Cell>
                 <Table.Cell >R$ {item.value}</Table.Cell>
