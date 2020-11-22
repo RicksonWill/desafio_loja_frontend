@@ -12,8 +12,10 @@ class Produtos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSeach:[{text:"oi", value:1}],
+      dataSeach:[],
+      select: "",
       data: [],
+      dataFix: [],
       deleteModal: false,
       addModal: false,
       editModal: false,
@@ -28,15 +30,31 @@ class Produtos extends Component {
   }
 
   loadData = async ()  => {
+    let search = [{text:"Todos",value:"all"}]
     try {
       const { data:produtos}  = await api.get('/produto/');
       produtos.length === 0 ?this.setState({isEmpty: true}):this.setState({isEmpty: false})
-      this.setState({data: produtos}); 
+      produtos.map((e)=>search.push({text: e.name+" - "+e.cod, value:e.name}))
+      this.setState({data: produtos,dataFix: produtos, dataSeach: search});
     } catch (e) {
       error("Ops... algum problema na conexão");
       this.setState({isEmpty: true});
     }
   }
+
+  filterData = () => {
+    const { select, dataFix } = this.state;
+    if(select === "all"){
+      this.setState({data: dataFix});
+      return
+    }
+    var re = new RegExp(select, "gi");
+    const newData = dataFix.filter(
+      (item) =>
+        item.name.match(re) || item.cod.match(re)
+    );
+    this.setState({ data: newData });
+  };
   
   render() {
     const { dataSeach, data, deleteModal,editModal, showModalAdd, itemSelect, isEmpty } = this.state;
@@ -60,6 +78,7 @@ class Produtos extends Component {
           search
           selection
           options={dataSeach}
+          onChange={(e,d)=>this.setState({select: d.value}, ()=> this.filterData())}
           icon='search'
           noResultsMessage="Nenhum produto encontrado."
         />

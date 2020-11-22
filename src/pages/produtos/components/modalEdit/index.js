@@ -83,6 +83,7 @@ export default class ModalEdit extends Component {
               placeholder="Produto de boa qualidade"
               name="name"
               value={name}
+              maxLength="30"
               error={errors["name"] ? true : false}
               onChange={(e)=>this.setState({name: e.target.value})}
               required
@@ -93,6 +94,7 @@ export default class ModalEdit extends Component {
               placeholder="22883044"
               name="cod"
               value={cod}
+              maxLength="30"
               error={errors["cod"] ? true : false}
               onChange={(e)=>this.setState({cod: e.target.value})}
               required
@@ -107,6 +109,7 @@ export default class ModalEdit extends Component {
               type="number"
               name="value"
               value={value}
+              maxLength="6"
               error={errors["value"] ? true : false}
               onChange={(e)=>this.setState({value: e.target.value})}
               width={7}
@@ -117,6 +120,7 @@ export default class ModalEdit extends Component {
               required
               type="number"
               value={qtd}
+              maxLength="6"
               error={errors["qtd"] ? true : false}
               onChange={(e)=>this.setState({qtd: e.target.value})}
               name="cod"

@@ -72,6 +72,7 @@ export default class ModalAdd extends Component {
               placeholder="Produto de boa qualidade"
               name="name"
               error={errors["name"] ? true : false}
+              maxLength="30"
               value={name}
               onChange={(e)=>this.setState({name: e.target.value})}
               required
@@ -81,6 +82,7 @@ export default class ModalAdd extends Component {
               label="Código"
               placeholder="22883044"
               name="cod"
+              maxLength="30"
               value={cod}
               error={errors["cod"] ? true : false}
               onChange={(e)=>this.setState({cod: e.target.value})}
@@ -95,6 +97,7 @@ export default class ModalAdd extends Component {
               required
               type="number"
               name="value"
+              maxLength="6"
               value={value}
               error={errors["value"] ? true : false}
               onChange={(e)=>this.setState({value: e.target.value})}
@@ -106,6 +109,7 @@ export default class ModalAdd extends Component {
               required
               type="number"
               value={qtd}
+              maxLength="6"
               error={errors["qtd"] ? true : false}
               onChange={(e)=>this.setState({qtd: e.target.value})}
               name="cod"
