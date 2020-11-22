@@ -1,16 +1,19 @@
-# Desafio Loja Frontend
+# Desafio Loja(Produtos) Front-end
 
-Projeto feito em React
+Oi! Esse projeto feito em **ReactJs**
 
-requisitos: Node v12.18.3 ou superior e NPM 6.14.6 ou superior
+**Requisitos:**
 
-Baixar dependência
+- **Node** v12.18.3 ou superior
+- **NPM** 6.14.6 ou superior
+
+## Instalar as dependência
 
 ```
 npm install
 ```
 
-Rodar em desenvolvimento
+Depois de instalar todas as dependências iniciar em modo desenvolvimento
 
 ```
 npm start
